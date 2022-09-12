@@ -3,7 +3,9 @@ package util
 import (
 	"crypto/md5"
 	"crypto/sha256"
+	"dealljobs/config"
 	"dealljobs/domain/user"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -13,10 +15,7 @@ import (
 	"time"
 )
 
-var ApplicationName = "My Simple JWT App"
-var LoginExpirationDuration = time.Duration(5) * time.Minute
 var JwtSigningMethod = jwt.SigningMethodHS256
-var JwtSignatureKey = []byte("the secret of kalimdor")
 
 type MyClaims struct {
 	jwt.RegisteredClaims
@@ -25,6 +24,7 @@ type MyClaims struct {
 
 func AuthenticateMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		cfg := config.Get()
 		authorizationHeader := c.GetHeader("Authorization")
 		if !strings.Contains(authorizationHeader, "Bearer") {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
@@ -39,7 +39,8 @@ func AuthenticateMiddleware() gin.HandlerFunc {
 				return nil, fmt.Errorf("signing method invalid")
 			}
 
-			return JwtSignatureKey, nil
+			key := []byte(cfg.JWTSignatureKey)
+			return key, nil
 		})
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -81,7 +82,8 @@ func EncryptPassword(password string) string {
 	md5pass := md5.Sum([]byte(password))
 	sha256pass := sha256.Sum256(md5pass[:])
 
-	return string(sha256pass[:])
+	str := base64.StdEncoding.EncodeToString(sha256pass[:])
+	return str
 }
 
 func GetUserInfo(c *gin.Context) (map[string]interface{}, error) {
@@ -103,10 +105,11 @@ func GetUserInfo(c *gin.Context) (map[string]interface{}, error) {
 }
 
 func TokenizeData(data interface{}) (string, error) {
+	cfg := config.Get()
 	claims := MyClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    ApplicationName,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(LoginExpirationDuration)),
+			Issuer:    cfg.ApplicationName,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(cfg.JWTExpiryDuration)),
 		},
 		Data: data,
 	}
@@ -116,7 +119,8 @@ func TokenizeData(data interface{}) (string, error) {
 		claims,
 	)
 
-	signedToken, err := token.SignedString(JwtSignatureKey)
+	key := []byte(cfg.JWTSignatureKey)
+	signedToken, err := token.SignedString(key)
 	if err != nil {
 		return "", err
 	}
