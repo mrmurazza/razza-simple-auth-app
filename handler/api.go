@@ -35,7 +35,10 @@ func (h *ApiHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success", "token": signedToken})
+	c.JSON(http.StatusOK, gin.H{
+		"token":   signedToken,
+		"message": "success",
+	})
 }
 
 func (h *ApiHandler) CheckAuth(c *gin.Context) {
@@ -45,7 +48,10 @@ func (h *ApiHandler) CheckAuth(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": userInfo})
+	c.JSON(http.StatusOK, gin.H{
+		"data":    userInfo,
+		"message": "success",
+	})
 }
 
 func (h *ApiHandler) CreateUser(c *gin.Context) {
@@ -69,7 +75,10 @@ func (h *ApiHandler) CreateUser(c *gin.Context) {
 	}
 
 	resp := response.FromUserToResponse(u)
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": resp})
+	c.JSON(http.StatusOK, gin.H{
+		"data":    resp,
+		"message": "success",
+	})
 }
 
 func (h *ApiHandler) UpdateUser(c *gin.Context) {
@@ -92,7 +101,9 @@ func (h *ApiHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
 }
 
 func (h *ApiHandler) DeleteUser(c *gin.Context) {
@@ -110,7 +121,9 @@ func (h *ApiHandler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
 }
 
 func (h *ApiHandler) GetUser(c *gin.Context) {
@@ -137,7 +150,11 @@ func (h *ApiHandler) GetUser(c *gin.Context) {
 	u := h.userSvc.GetUser(id)
 
 	resp := response.FromUserToResponse(u)
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": resp})
+
+	c.JSON(http.StatusOK, gin.H{
+		"data":    resp,
+		"message": "success",
+	})
 }
 
 func (h *ApiHandler) GetAllUsers(c *gin.Context) {
@@ -148,5 +165,9 @@ func (h *ApiHandler) GetAllUsers(c *gin.Context) {
 	for _, u := range users {
 		responses = append(responses, response.FromUserToResponse(u))
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": responses})
+
+	c.JSON(http.StatusOK, gin.H{
+		"data":    responses,
+		"message": "success",
+	})
 }

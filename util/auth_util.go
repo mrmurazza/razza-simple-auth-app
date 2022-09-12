@@ -18,6 +18,11 @@ var LoginExpirationDuration = time.Duration(5) * time.Minute
 var JwtSigningMethod = jwt.SigningMethodHS256
 var JwtSignatureKey = []byte("the secret of kalimdor")
 
+type MyClaims struct {
+	jwt.RegisteredClaims
+	Data interface{} `json:"data"`
+}
+
 func AuthenticateMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authorizationHeader := c.GetHeader("Authorization")
@@ -95,11 +100,6 @@ func GetUserInfo(c *gin.Context) (map[string]interface{}, error) {
 	}
 
 	return u, nil
-}
-
-type MyClaims struct {
-	jwt.RegisteredClaims
-	Data interface{} `json:"data"`
 }
 
 func TokenizeData(data interface{}) (string, error) {
