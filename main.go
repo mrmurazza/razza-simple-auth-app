@@ -16,7 +16,7 @@ func main() {
 	pkg.InitDatabase()
 
 	// init service & repo
-	itemRepo := itemImpl.NewRepo(pkg.Database)
+	itemRepo := itemImpl.NewRepo(pkg.DB)
 	itemSvc := itemImpl.NewService(itemRepo)
 
 	// init handler

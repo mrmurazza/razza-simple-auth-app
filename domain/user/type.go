@@ -9,8 +9,8 @@ type Repository interface {
 	Update(u *User) error
 	Delete(id int) error
 
-	GetUser(id int) *User
-	GetUserByUserPass(username, password string) *User
+	GetUser(id int) (*User, error)
+	GetUserByUserPass(username, password string) (*User, error)
 	GetUserByUsername(u User) (*User, error)
 	GetAllUsers() []*User
 }

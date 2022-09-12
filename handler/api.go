@@ -141,7 +141,7 @@ func (h *ApiHandler) GetUser(c *gin.Context) {
 		return
 	}
 
-	currentId := int(currentUserInfo["Id"].(float64))
+	currentId := int(currentUserInfo["ID"].(float64))
 	if currentUserInfo["Role"] != string(user.RoleAdmin) && currentId != id {
 		c.JSON(http.StatusForbidden, gin.H{"err": "you are forbidden to access this user data"})
 		return

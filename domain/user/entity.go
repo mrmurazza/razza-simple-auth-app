@@ -19,13 +19,13 @@ func GetAllRoles() map[Role]bool {
 }
 
 type User struct {
-	Id        int
+	ID        int
 	Username  string
 	Name      string
 	Password  string
 	Address   string
 	Role      Role
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
+	CreatedAt *time.Time `gorm:"default:current_timestamp"`
+	UpdatedAt *time.Time `gorm:"default:current_timestamp"`
+	DeletedAt *time.Time `gorm:"default: null"`
 }

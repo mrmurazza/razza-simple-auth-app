@@ -19,7 +19,7 @@ type (
 
 func FromUserToResponse(u *user.User) *UserResponse {
 	return &UserResponse{
-		ID:        u.Id,
+		ID:        u.ID,
 		Username:  u.Username,
 		Name:      u.Name,
 		Address:   u.Address,

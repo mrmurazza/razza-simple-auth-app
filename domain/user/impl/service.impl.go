@@ -56,9 +56,12 @@ func (s *service) CreateUserIfNotAny(req request.CreateUserRequest) (*user.User,
 }
 
 func (s *service) UpdateUser(req request.UpdateUserRequest) error {
-	u := s.repo.GetUser(req.ID)
+	u, err := s.repo.GetUser(req.ID)
 	if u == nil {
 		return errors.New("user Not Found")
+	}
+	if err != nil {
+		return err
 	}
 
 	role, err := s.ConvertToRole(req.Role)
@@ -90,7 +93,12 @@ func (s *service) DeleteUser(id int) error {
 }
 
 func (s *service) GetUser(id int) *user.User {
-	return s.repo.GetUser(id)
+	u, err := s.repo.GetUser(id)
+	if err != nil {
+		return nil
+	}
+
+	return u
 }
 
 func (s *service) GetAllUsers() []*user.User {
@@ -99,9 +107,12 @@ func (s *service) GetAllUsers() []*user.User {
 
 func (s *service) Login(username, password string) (*user.User, string, error) {
 	encryptedPass := util.EncryptPassword(password)
-	u := s.repo.GetUserByUserPass(username, encryptedPass)
+	u, err := s.repo.GetUserByUserPass(username, encryptedPass)
 	if u == nil {
 		return nil, "", nil
+	}
+	if err != nil {
+		return nil, "", err
 	}
 
 	token, err := util.TokenizeData(u)
