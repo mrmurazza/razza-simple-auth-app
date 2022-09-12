@@ -30,13 +30,9 @@ func init() {
 }
 
 func TestCreateItemIfNotAny(t *testing.T) {
-	req := request.CreateUserRequest{
-		SKU:  "ASD",
-		Name: "ITEM-123",
-	}
+	req := request.CreateUserRequest{}
 
 	it := user.User{
-		Id:   "ASD",
 		Name: "ITEM-123",
 	}
 
