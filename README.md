@@ -1,63 +1,99 @@
 # Quickstart Guide to Set up Dev Workspace
 
-1. Git clone https://github.com/mrmurazza/ijah_store.git
+1. Git clone git@github.com:mrmurazza/razza-simple-auth-app.git
 2. Make sure you have Go installed and set up Go workspace
-3. Install sqlite3 driver library for database driver and Gin-Gonic for web framework using `go get` like this:
-
-   `go get github.com/mattn/go-sqlite3`
-   
-    `go get -u github.com/gin-gonic/gin`
-    
+3. Install the dependencies by running `go mod download`
 4. Go to your project folder using `cd` and run your project using:
 
-    `$ go run main.go`
-    
+   `$ go run main.go`
+
 5. For deployment, run this command to build binary file
 
-    `$ go build main.go`
-    
-    
-# Project Structure 
+   `$ go build main.go`
+
+# Project Structure
+
 ```
 .
-├── src/app
-│   ├── item                         > package contains Item-related code 
-│   ├── purchase                     > package contains purchase-related code
-│   ├── request                      > package contains request struct code
-│   ├── response                     > package contains response struct code
-│   ├── restock                      > package contains restock-related code
-│   ├── util                         
-│   └── controllers.go               > file contains input/output preparation
+├── config                          > contains config file that reads from env variable
+├── domain                          > contains the main business logic grouped by its domain
+│     └── user                      
+│        ├── impl                   > contains class implementation of service & repo
+│        ├── entity.go              > file contains domain model and data object related to the domain 
+│        └── type.go                > file contains interface declaration of service & repo
+├── dto                             > contains data object used in endpoint requests & response
+├── handler                         > contains handler class responsible to handle inputs from external to domain & parsing response from domain to external
+├── pkg                             > contains package or util class used by the domain
 ├── README.md
-├── ijah_store.db                   > SQLite DB file
-├── inventory_report_17_01_19.csv   > Example output of inventory reports in CSV
 ├── main.go                         > Main Go file
-└── sales_report_17_01_19.csv       > Example output of sales reports in CSV 
+└── Dockerfile 
 
 ```
 
 # Project Component
 
-Basically, this project is separated into several components: 
-1. Controller : responsible on preparing the inputs and serving the outputs and the one to call the business logic code.
-2. Handler : responsible on handling the main core of the business logic. (ex: `item_handler.go, restock_handler.go, & purchase.handler)`
-3. Model : responsible on containing the struct and queries. (ex: `item.go, restock_resception.go, etc`)
+Basically, this project is separated into several components:
 
+1. Handler : responsible on preparing the inputs and serving the outputs and the one to call the business logic code.
+2. Domain: contains main business logics consist of Type, Service, Repository, & Entity/Model
+
+   2.1. Type : contains interface declaration of service & repository, one of dependency inversion implementation
+
+   2.2. Service : contains service implementation responsible on handling the main core of the business logic. (
+   ex: `domain/user/impl/service.impl.go`)
+
+   2.3. Repository : responsible on handling DB queries. (ex: `domain/user/impl/repo.impl.go`)
+
+   2.4. Entity : contains data object (struct/entity) highly related with core domain or event its domain model itself (
+   ex: `domain/user/entity.go`)
+3. DTO (Data Transfer Object): contains data object related to API requests & responses
+4. PKG (Package): contains utils or specific package used by the core domain
+
+# API Docs
+
+In this GitHub repo provided the API docs using Postman Collection & Postman Environment Variable export files.
+The endpoint besides Login will need to bear Authorization with Bearer Token that you get once you log in.
+
+However, using this Postman collection below, your token will be stored in the environment variables once you success Log in, 
+so you do not need to manually copy & paste the token to other requests each time after you log in.
+
+[Postman Collection JSON Export File](postman/Deall%20Jobs%20Assessment.postman_collection.json)
+
+[Postman Environment Variable JSON Export File](postman/environment/8d0bde94-c3cc-423a-968a-09d7171c4f84.json)
+
+Below some screenshot of the Postman
+
+### Login by Admin
+![login-admin](postman/screenshot/login-admin.png)
+
+### Create User by Admin
+![create_user-admin](postman/screenshot/create_user-admin.png)
+
+### Get All Users by Admin
+![get_all_users-admin](postman/screenshot/get_all_users-admin.png)
+
+### Get All Users by Users
+In general this is the response you get when user access outside read their own data
+![get_all_users-user](postman/screenshot/get_all_users-user.png)
 
 # Notes Regarding the Assessment:
+1. This simple Auth & User CRUD App is already deployed in Google Cloud Platform - GKE that can be accessed in this IP: `http://34.170.175.183`
+2. The url already set in the Postman Environment Variable json ready to use. 
+3. The Admin Credentials that can be used to log in are:
+   ```
+   username: admin
+   password: 123456
+   ```
+4. Below are the screenshot of the GKE console
 
-Info Test BE
-1. Dengan NodeJS (atau Golang), agar saudara membuat Rest API CRUD User dan User Login.
-2. Jika menggunakan NodeJS maka disarankan menggunakan ExpressJS. Database bebas, tetapi disarankan MongoDB.
-3. User Login digunakan user (username, password) untuk mengakses API CRUD (token, tetapi mendapatkan nilai tambahan jika menggunakan refresh token).
-4. Bikin 2 users dengan role: 1 Admin, 1 User.
-5. Admin bisa melakukan/mengakses semua API CRUD, sedangkan User hanya bisa mengakses data user bersangkutan saja (Read)
-6. Implementasi arstektur Microservices, menggunakan Kubernetes dengan Docker container deploy di VPS (1 node dengan beberapa pod di dalamnya). Bagi yang belum memiliki VPS, maka cukup (a) menyiapkan semua YML agar aplikasi bisa dijalankan secara containerize dan siap di deploy di Kubernetes dan (b) di-deploy di lokal dan sertakan screenshoot.
-7. Upload source code ke Github beserta script YML Kubernetes.
-8. Bikin dokumentasi API nya (Postman atau Swagger) yang bisa diakses ke server Rest API nya.
-9. Bikin diagram arstektur nya yang menjelaskan flow API CRUD dan Login.
-10. Lampirkan credential Admin di Readme.
+   GKE Cluster:
 
-Mohon submit via whatsapp ini paling lambat Selasa, 13 September jam 20.10 WIB.*
+   ![cluster](assessment/clusters.png)
 
-Working here is really fulfilling & the salary makes it extra rewarding. Goodluck and let me know if you need anything!! :)
+   GKE Container:
+
+   ![container](assessment/container.png)
+
+   GKE Deployment Detail:
+
+   ![deployments-pod-service](assessment/deployments-pod-service.png)
