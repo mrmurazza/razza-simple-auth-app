@@ -40,8 +40,16 @@ func InitDatabase() {
 		"deleted_at datetime default null," +
 		"PRIMARY KEY (`id`)" +
 		")").Error
-
 	if err != nil {
 		panic(err)
 	}
+
+	// Seeder Admin
+	err = DB.Exec("INSERT INTO users (id, username, name, password, address, role) " +
+		"VALUES(1, 'admin', '', '+OyZfszwFbIyrCuXmS7ObK8oBg2V0Mv6bagDBk6UFYM=', '', 'ADMIN') " +
+		"ON DUPLICATE KEY UPDATE username='admin'").Error
+	if err != nil {
+		panic(err)
+	}
+
 }
