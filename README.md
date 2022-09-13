@@ -97,3 +97,7 @@ In general this is the response you get when user access outside read their own 
    GKE Deployment Detail:
 
    ![deployments-pod-service](assessment/deployments-pod-service.png)
+
+5. Below are the architecture diagram
+
+   ![diagram-arch](assessment/diagrams-arch.png)
