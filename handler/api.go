@@ -58,19 +58,19 @@ func (h *ApiHandler) CreateUser(c *gin.Context) {
 	var req request.CreateUserRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	err = req.Validate()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	u, err := h.userSvc.CreateUserIfNotAny(req)
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"err": err})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err})
 		return
 	}
 
@@ -85,19 +85,19 @@ func (h *ApiHandler) UpdateUser(c *gin.Context) {
 	var req request.UpdateUserRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	err = req.Validate()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	err = h.userSvc.UpdateUser(req)
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"err": err})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -111,13 +111,13 @@ func (h *ApiHandler) DeleteUser(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	err = h.userSvc.DeleteUser(id)
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"err": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -131,23 +131,27 @@ func (h *ApiHandler) GetUser(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	currentUserInfo, err := util.GetUserInfo(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	currentId := int(currentUserInfo["ID"].(float64))
 	if currentUserInfo["Role"] != string(user.RoleAdmin) && currentId != id {
-		c.JSON(http.StatusForbidden, gin.H{"err": "you are forbidden to access this user data"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "you are forbidden to access this user data"})
 		return
 	}
 
 	u := h.userSvc.GetUser(id)
+	if u == nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "this data does not exist"})
+		return
+	}
 
 	resp := response.FromUserToResponse(u)
 
