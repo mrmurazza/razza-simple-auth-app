@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  creationTimestamp: "2022-09-13T08:56:10Z"
+  finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    app: nginx-1
+  name: dealljobs-test-service
+  namespace: default
+spec:
+  allocateLoadBalancerNodePorts: true
+  clusterIP: 10.108.12.192
+  clusterIPs:
+    - 10.108.12.192
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - nodePort: 32634
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: nginx-1
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+      - ip: 34.170.175.183

@@ -84,7 +84,15 @@ In general this is the response you get when user access outside read their own 
    username: admin
    password: 123456
    ```
-4. Below are the screenshot of the GKE console
+4. Detail regarding the Kubernetes configuration are provided with .yaml file for service & deployments and screenshot of GKE console below:
+   
+   ### Kubernetes .yaml file
+
+   [deployment.yaml](kube/deployment.yaml)
+
+   [service.yaml](kube/service.yaml)
+   
+   ### Screenshot
 
    GKE Cluster:
 
@@ -98,6 +106,6 @@ In general this is the response you get when user access outside read their own 
 
    ![deployments-pod-service](assessment/deployments-pod-service.png)
 
-5. Below are the architecture diagram
+5. The architecture diagram of this app
 
    ![diagram-arch](assessment/diagrams-arch.png)
