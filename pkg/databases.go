@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"dealljobs/config"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"time"
@@ -9,8 +11,8 @@ import (
 var DB *gorm.DB
 
 func InitDatabase() {
-
-	db, err := gorm.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/dealljobs-test?parseTime=true")
+	cfg := config.Get()
+	db, err := gorm.Open(cfg.DBDriver, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName))
 	if err != nil {
 		panic(err)
 	}
