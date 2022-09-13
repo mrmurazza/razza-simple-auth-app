@@ -1,10 +1,10 @@
 package user_test
 
 import (
-	"dealljobs/domain/request"
 	"dealljobs/domain/user"
 	"dealljobs/domain/user/impl"
 	"dealljobs/domain/user/mocks"
+	"dealljobs/dto/request"
 	"testing"
 )
 

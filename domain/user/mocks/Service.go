@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	request "dealljobs/domain/request"
+	request "dealljobs/dto/request"
 
 	mock "github.com/stretchr/testify/mock"
 

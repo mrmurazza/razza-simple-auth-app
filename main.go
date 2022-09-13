@@ -3,8 +3,8 @@ package main
 import (
 	itemImpl "dealljobs/domain/user/impl"
 	"dealljobs/handler"
-	"dealljobs/pkg"
-	"dealljobs/util"
+	"dealljobs/pkg/auth"
+	"dealljobs/pkg/database"
 	"github.com/gin-gonic/gin"
 	"log"
 	"time"
@@ -13,10 +13,10 @@ import (
 func main() {
 	r := gin.Default()
 
-	pkg.InitDatabase()
+	database.InitDatabase()
 
 	// init service & repo
-	itemRepo := itemImpl.NewRepo(pkg.DB)
+	itemRepo := itemImpl.NewRepo(database.DB)
 	itemSvc := itemImpl.NewService(itemRepo)
 
 	// init handler
@@ -26,17 +26,17 @@ func main() {
 	{
 		v1.POST("/login", apiHandler.Login)
 
-		authorized := v1.Group("", util.AuthenticateMiddleware())
+		authorized := v1.Group("", auth.AuthenticateMiddleware())
 
 		authorized.GET("/check-auth", apiHandler.CheckAuth)
 		authorized.GET("/user/:id", apiHandler.GetUser)
 
-		admin := authorized.Use(util.AuthenticateAdmin())
+		admin := authorized.Use(auth.AuthenticateAdmin())
 
 		admin.GET("/users", apiHandler.GetAllUsers)
 		admin.POST("/user", apiHandler.CreateUser)
 		admin.PUT("/user", apiHandler.UpdateUser)
-		admin.DELETE("/user", apiHandler.DeleteUser)
+		admin.DELETE("/user/:id", apiHandler.DeleteUser)
 	}
 
 	r.GET("/ping", func(c *gin.Context) {

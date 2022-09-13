@@ -1,9 +1,9 @@
 package impl
 
 import (
-	"dealljobs/domain/request"
 	"dealljobs/domain/user"
-	"dealljobs/util"
+	"dealljobs/dto/request"
+	"dealljobs/pkg/auth"
 	"errors"
 )
 
@@ -37,7 +37,7 @@ func (s *service) CreateUserIfNotAny(req request.CreateUserRequest) (*user.User,
 	u := &user.User{
 		Username: req.Username,
 		Name:     req.Name,
-		Password: util.EncryptPassword(req.Password),
+		Password: auth.EncryptPassword(req.Password),
 		Address:  req.Address,
 		Role:     role,
 	}
@@ -71,7 +71,7 @@ func (s *service) UpdateUser(req request.UpdateUserRequest) error {
 
 	u.Username = req.Username
 	u.Name = req.Name
-	u.Password = util.EncryptPassword(req.Password)
+	u.Password = auth.EncryptPassword(req.Password)
 	u.Address = req.Address
 	u.Role = role
 
@@ -106,7 +106,7 @@ func (s *service) GetAllUsers() []*user.User {
 }
 
 func (s *service) Login(username, password string) (*user.User, string, error) {
-	encryptedPass := util.EncryptPassword(password)
+	encryptedPass := auth.EncryptPassword(password)
 	u, err := s.repo.GetUserByUserPass(username, encryptedPass)
 	if u == nil {
 		return nil, "", nil
@@ -115,7 +115,7 @@ func (s *service) Login(username, password string) (*user.User, string, error) {
 		return nil, "", err
 	}
 
-	token, err := util.TokenizeData(u)
+	token, err := auth.TokenizeData(u)
 	if err != nil {
 		return nil, "", err
 	}

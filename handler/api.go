@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"dealljobs/domain/request"
-	"dealljobs/domain/response"
 	"dealljobs/domain/user"
-	"dealljobs/util"
+	"dealljobs/dto/request"
+	"dealljobs/dto/response"
+	"dealljobs/pkg/auth"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -135,7 +135,7 @@ func (h *ApiHandler) GetUser(c *gin.Context) {
 		return
 	}
 
-	currentUserInfo, err := util.GetUserInfo(c)
+	currentUserInfo, err := auth.GetUserInfo(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return

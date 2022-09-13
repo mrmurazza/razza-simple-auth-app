@@ -1,7 +1,7 @@
 package user
 
 import (
-	"dealljobs/domain/request"
+	"dealljobs/dto/request"
 )
 
 type Repository interface {
