@@ -77,14 +77,15 @@ In general this is the response you get when user access outside read their own 
 ![get_all_users-user](postman/screenshot/get_all_users-user.png)
 
 # Notes Regarding the Assessment:
-1. This simple Auth & User CRUD App is already deployed in Google Cloud Platform - GKE that can be accessed in this IP: `http://34.170.175.183`
-2. The url already set in the Postman Environment Variable json ready to use. 
-3. The Admin Credentials that can be used to log in are:
-   ```
-   username: admin
-   password: 123456
-   ```
-4. Detail regarding the Kubernetes configuration are provided with .yaml file for service & deployments and screenshot of GKE console below:
+~~1. This simple Auth & User CRUD App is already deployed in Google Cloud Platform - GKE that can be accessed in this IP: `http://34.170.175.183`~~
+
+~~2. The url already set in the Postman Environment Variable json ready to use.~~ 
+
+~~3. The Admin Credentials that can be used to log in are:
+   **_username: admin
+   password: 123456_**~~
+
+1. Detail regarding the Kubernetes configuration are provided with .yaml file for service & deployments and previous screenshot of GKE console below:
    
    ### Kubernetes .yaml file
 
@@ -106,6 +107,6 @@ In general this is the response you get when user access outside read their own 
 
    ![deployments-pod-service](assessment/deployments-pod-service.png)
 
-5. The architecture diagram of this app
+2. The architecture diagram of this app
 
    ![diagram-arch](assessment/diagrams-arch.png)
